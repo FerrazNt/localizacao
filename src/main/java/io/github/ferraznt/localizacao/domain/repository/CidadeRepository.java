@@ -3,11 +3,14 @@ package io.github.ferraznt.localizacao.domain.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import io.github.ferraznt.localizacao.domain.entity.Cidade;
 
-public interface CidadeRepository extends JpaRepository<Cidade, Long> {
+public interface CidadeRepository extends JpaRepository<Cidade, Long>, JpaSpecificationExecutor<Cidade> {
     
     // Busca pelo nome exato
     List<Cidade> findByNome(String nome);
@@ -24,9 +27,13 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long> {
     // Permite uso de % 
     List<Cidade> findByNomeLike(String nome);
 
-    // Usando Query para desconsiderar o Case.
-    @Query(" select c from Cidade c where upper(c.nome) like upper(?1)")
-    List<Cidade> findByNomeLikeNoCase(String nome);
+    // Usando Query para desconsiderar o Case. (Ordenado)
+    @Query("select c from Cidade c where upper(c.nome) like upper(?1)")
+    List<Cidade> findByNomeLikeNoCase(String nome, Sort sort);
+
+    // Usando Query para desconsiderar o Case. (Paginado)
+    @Query("select c from Cidade c where upper(c.nome) like upper(?1)")
+    List<Cidade> findByNomeLikeNoCase(String nome, Pageable pagina);
 
     List<Cidade> findByHabitantes(Long habitantes);
 

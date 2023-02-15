@@ -1,11 +1,21 @@
 package io.github.ferraznt.localizacao.domain.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 
 import io.github.ferraznt.localizacao.domain.entity.Cidade;
 import io.github.ferraznt.localizacao.domain.repository.CidadeRepository;
+import io.github.ferraznt.localizacao.domain.repository.specs.CidadeSpecs;
 
 @Service
 public class CidadeService {
@@ -42,7 +52,20 @@ public class CidadeService {
 	}
 
 	public void cidadeLikeNomeNoCase(String nome){
-		repository.findByNomeLikeNoCase(nome).forEach(System.out::println);	
+		repository
+            .findByNomeLikeNoCase(nome, Sort.by("habitantes"))
+            .forEach(System.out::println);	
+	}
+
+    public void cidadeLikeNomeNoCasePaginado(String nome, Integer pagina){
+        if (pagina == null){
+            pagina = 2;
+        }
+
+        Pageable pageable = PageRequest.of(0, pagina);
+		repository
+            .findByNomeLikeNoCase(nome, pageable)
+            .forEach(System.out::println);	
 	}
 
 	public void cidadesPorHabitantes(Long habitantes){
@@ -71,5 +94,24 @@ public class CidadeService {
 		}
 		
 	}
+
+    public List<Cidade> filtroCidadeDinamico(Cidade cidade){
+        ExampleMatcher matcher = ExampleMatcher
+            .matching()
+            .withIgnoreCase()
+            .withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
+        Example<Cidade> example = Example
+            .of(cidade,matcher);
+        return repository.findAll(example);
+    }
+
+    // Montando o Listar a Partir de Uma Spec
+    public void listarCidadesSpecByNome(String nome){
+        System.out.println("Buscando Cidade "+nome);
+        repository
+            //.findAll(CidadeSpecs.nomeEqual(nome).and(CidadeSpecs.habitantesGreaterThan(10000000)))
+            .findAll(CidadeSpecs.nomeEqual(nome).or(CidadeSpecs.habitantesGreaterThan(10000000)))
+            .forEach(System.out::println);
+    }
 
 }

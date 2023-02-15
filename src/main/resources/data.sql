@@ -7,7 +7,7 @@ create table cidade(
 insert into cidade 
     (id_cidade, nome, qtd_habitantes)
 values 
-    (1,'Serra Talhada', 175278),
+    (1,'Serra Talhada', 2980006),
     (2,'Recife',180000000),
     (3, 'Fortaleza', 8000000),
     (4, 'Belo Horizonte', 6000000),
@@ -15,7 +15,7 @@ values
     (6, 'Porto Velho', 300000),
     (7, 'Porto Alegre', 5670000),
     (8, 'Natal', 1234567),
-    (9, 'São Paulo', 190000000),
+    (9, 'Sao Paulo', 12330000),
     (10, 'Rio de Janeiro', 130000000),
     (11, 'Brasilia', 123131313),
     (12, 'Rio Velho', 100000),
