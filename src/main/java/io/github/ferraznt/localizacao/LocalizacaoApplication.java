@@ -31,6 +31,10 @@ public class LocalizacaoApplication implements CommandLineRunner{
 
 		cidadeService.listarSpecCidadeDinamico(cidade);
 
+		//cidadeService.cidadesPorNomeSQLNativo("Recife");
+
+		cidadeService.selectIdNomeToProjection("Recife");
+
 	}
 
 }

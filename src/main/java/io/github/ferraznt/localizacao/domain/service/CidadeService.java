@@ -27,6 +27,16 @@ public class CidadeService {
 
     }
 
+    public void cidadesPorNomeSQLNativo(String nome){
+		repository.findByNomeSQLNativo(nome).forEach(System.out::println);	
+	}
+
+    public void selectIdNomeToProjection(String nome){
+		repository.selectIdNomeToProjection(nome)
+            .stream().map(cidadeProjection -> new Cidade(cidadeProjection.getId(), cidadeProjection.getNome(),null ))
+            .forEach(System.out::println);
+	}
+
     public void listarCidades(){
 		repository.findAll().forEach(System.out::println);	
 	}

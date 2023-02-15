@@ -5,13 +5,21 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import io.github.ferraznt.localizacao.domain.entity.Cidade;
+import io.github.ferraznt.localizacao.domain.repository.projections.CidadeProjection;
 
 public interface CidadeRepository extends JpaRepository<Cidade, Long>, JpaSpecificationExecutor<Cidade> {
-    
+
+    @Query(nativeQuery = true, value=" select * from cidade as c where c.nome = :nome")
+    List<Cidade> findByNomeSQLNativo(@Param("nome") String nome);
+
+    @Query(nativeQuery = true, value=" select c.id_cidade as id, c.nome from cidade as c where c.nome = :nome")
+    List<CidadeProjection> selectIdNomeToProjection(@Param("nome") String nome);
+
     // Busca pelo nome exato
     List<Cidade> findByNome(String nome);
 
