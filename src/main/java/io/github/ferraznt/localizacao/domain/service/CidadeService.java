@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.StringUtils;
 
 import io.github.ferraznt.localizacao.domain.entity.Cidade;
 import io.github.ferraznt.localizacao.domain.repository.CidadeRepository;
@@ -110,8 +110,32 @@ public class CidadeService {
         System.out.println("Buscando Cidade "+nome);
         repository
             //.findAll(CidadeSpecs.nomeEqual(nome).and(CidadeSpecs.habitantesGreaterThan(10000000)))
-            .findAll(CidadeSpecs.nomeEqual(nome).or(CidadeSpecs.habitantesGreaterThan(10000000)))
+            .findAll(CidadeSpecs.nomeEqual(nome).or(CidadeSpecs.habitantesGreaterThan(10000000L)))
             .forEach(System.out::println);
+    }
+
+    public void listarSpecCidadeDinamico(Cidade filtro){
+
+        Specification<Cidade> specs = Specification.where((root, query, cb) -> cb.conjunction());
+        // Gera um Modelo Gregoriano de Query
+        // select * from cidade where 1 = 1
+
+        if(filtro.getId() != null){
+            specs = specs.and(CidadeSpecs.idEqual(filtro.getId()));
+        }
+
+        if(StringUtils.hasText(filtro.getNome())){
+            specs = specs.and(CidadeSpecs.nomeEqual(filtro.getNome()));
+        }
+
+        if(filtro.getHabitantes() != null){
+            specs = specs.and(CidadeSpecs.habitantesEqual(filtro.getHabitantes()));
+        }
+
+        System.out.println("Listando a partir de uma specification:");
+
+        repository.findAll(specs).forEach(System.out::println);
+
     }
 
 }

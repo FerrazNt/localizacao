@@ -21,11 +21,16 @@ public class LocalizacaoApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		var cidade = new Cidade(null, "serra",null);
+
+
+		var cidade = new Cidade(1L, "Serra Talhada",2980006L);
 		
-		cidadeService.filtroCidadeDinamico(cidade).forEach(System.out::println);
+		//cidadeService.filtroCidadeDinamico(cidade).forEach(System.out::println);
 		// Usando a Spec
-		cidadeService.listarCidadesSpecByNome("Sao Paulo");
+		//cidadeService.listarCidadesSpecByNome("Sao Paulo");
+
+		cidadeService.listarSpecCidadeDinamico(cidade);
+
 	}
 
 }
